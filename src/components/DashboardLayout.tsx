@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
@@ -179,11 +178,13 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
         <header className="h-16 border-b flex items-center px-4">
           <div className="flex items-center gap-3 md:hidden">
-            <SheetTrigger asChild onClick={() => setIsMobileMenuOpen(true)}>
-              <Button variant="ghost" size="icon">
-                <Menu size={20} />
-              </Button>
-            </SheetTrigger>
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(true)}>
+                  <Menu size={20} />
+                </Button>
+              </SheetTrigger>
+            </Sheet>
             <h1 className="text-xl font-semibold">ConstructIoT</h1>
           </div>
           
