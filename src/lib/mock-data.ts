@@ -1,4 +1,3 @@
-
 import { 
   Truck, 
   Wrench, 
@@ -311,4 +310,27 @@ export const getAlertStatistics = () => {
     warningAlerts,
     infoAlerts
   };
+};
+
+// Project-specific data functions
+export const getProjectDevices = (projectId: string) => {
+  // For demo purposes, just return a subset of devices
+  return mockDevices.slice(0, 8).map(device => ({
+    ...device,
+    lastReading: new Date().toISOString(),
+    status: ['active', 'active', 'warning', 'error', 'inactive'][Math.floor(Math.random() * 5)],
+    batteryLevel: Math.floor(Math.random() * 100),
+    location: mockProjects.find(p => p.id === projectId)?.location || device.location
+  }));
+};
+
+export const getProjectAlerts = (projectId: string) => {
+  // For demo purposes, return a subset of alerts with project-specific modifications
+  return mockAlerts.slice(0, 7).map(alert => ({
+    ...alert,
+    severity: ['critical', 'warning', 'info'][Math.floor(Math.random() * 3)],
+    resolved: Math.random() > 0.7,
+    deviceId: mockDevices[Math.floor(Math.random() * mockDevices.length)].id,
+    timestamp: new Date(Date.now() - Math.floor(Math.random() * 7 * 24 * 60 * 60 * 1000)).toISOString()
+  }));
 };
