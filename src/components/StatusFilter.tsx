@@ -3,41 +3,34 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface StatusFilterProps {
-  statuses: { label: string; value: string; count?: number; color?: string }[];
-  selectedStatus: string | null;
-  onChange: (status: string | null) => void;
+  statusCounts: { [key: string]: number };
+  activeStatus: string;
+  onStatusChange: (status: string) => void;
 }
 
-export function StatusFilter({ statuses, selectedStatus, onChange }: StatusFilterProps) {
+export function StatusFilter({ statusCounts, activeStatus, onStatusChange }: StatusFilterProps) {
   return (
     <div className="flex flex-wrap gap-2 mb-4">
-      <Button
-        variant="outline"
-        size="sm"
-        className={cn(
-          "rounded-full",
-          selectedStatus === null && "bg-primary text-primary-foreground"
-        )}
-        onClick={() => onChange(null)}
-      >
-        All
-      </Button>
-      
-      {statuses.map((status) => (
+      {Object.entries(statusCounts).map(([status, count]) => (
         <Button
-          key={status.value}
+          key={status}
           variant="outline"
           size="sm"
           className={cn(
             "rounded-full",
-            selectedStatus === status.value && "bg-primary text-primary-foreground"
+            activeStatus === status && "bg-primary text-primary-foreground"
           )}
-          onClick={() => onChange(status.value)}
+          onClick={() => onStatusChange(status)}
         >
-          {status.label}
-          {status.count !== undefined && (
+          {status === 'all' ? 'All' : 
+           status === 'active' ? 'Active' : 
+           status === 'warning' ? 'Warning' : 
+           status === 'error' ? 'Error' : 
+           status === 'inactive' ? 'Inactive' : 
+           status}
+          {count !== undefined && (
             <span className="ml-1 text-xs bg-muted rounded-full px-1.5 py-0.5">
-              {status.count}
+              {count}
             </span>
           )}
         </Button>

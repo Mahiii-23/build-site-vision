@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { IoTDevice } from "@/lib/mock-data";
-import { capitalizeFirstLetter } from "@/lib/utils";
+import { capitalizeFirstLetter, cn } from "@/lib/utils";
 import { Battery, BatteryLow, BatteryFull, BatteryMedium, Clock } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 

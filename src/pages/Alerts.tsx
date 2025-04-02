@@ -29,14 +29,15 @@ import { Badge } from "@/components/ui/badge";
 import { mockAlerts } from "@/lib/mock-data";
 import { formatDate } from "@/lib/utils";
 
-// Alert type definition for clarity
+// Alert type definition for clarity - matched to match mock-data
 interface Alert {
   id: string;
   title: string;
   message: string;
-  type: "info" | "warning" | "error" | "success";
+  severity: "info" | "warning" | "error";
   timestamp: string;
   read: boolean;
+  deviceId?: string;
   device?: {
     id: string;
     name: string;
@@ -44,8 +45,8 @@ interface Alert {
 }
 
 const AlertItem = ({ alert, onMarkAsRead }: { alert: Alert; onMarkAsRead: (id: string) => void }) => {
-  const getAlertIcon = (type: string) => {
-    switch (type) {
+  const getAlertIcon = (severity: string) => {
+    switch (severity) {
       case "info":
         return <Info className="h-5 w-5 text-blue-500" />;
       case "warning":
@@ -59,8 +60,8 @@ const AlertItem = ({ alert, onMarkAsRead }: { alert: Alert; onMarkAsRead: (id: s
     }
   };
 
-  const getAlertBadge = (type: string) => {
-    switch (type) {
+  const getAlertBadge = (severity: string) => {
+    switch (severity) {
       case "info":
         return <Badge variant="outline" className="text-blue-500 border-blue-200 bg-blue-50">Info</Badge>;
       case "warning":
@@ -78,14 +79,14 @@ const AlertItem = ({ alert, onMarkAsRead }: { alert: Alert; onMarkAsRead: (id: s
     <div className={`p-4 border-b ${!alert.read ? 'bg-muted/40' : ''}`}>
       <div className="flex items-start gap-3">
         <div className="flex-shrink-0 mt-1">
-          {getAlertIcon(alert.type)}
+          {getAlertIcon(alert.severity)}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <h3 className="font-medium">
               {alert.title}
             </h3>
-            {getAlertBadge(alert.type)}
+            {getAlertBadge(alert.severity)}
             {!alert.read && (
               <span className="inline-block w-2 h-2 rounded-full bg-primary"></span>
             )}
@@ -136,7 +137,7 @@ const AlertItem = ({ alert, onMarkAsRead }: { alert: Alert; onMarkAsRead: (id: s
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <h4 className="text-sm font-medium mb-1">Type</h4>
-                    <p className="text-sm capitalize">{alert.type}</p>
+                    <p className="text-sm capitalize">{alert.severity}</p>
                   </div>
                   <div>
                     <h4 className="text-sm font-medium mb-1">Date & Time</h4>
@@ -194,13 +195,16 @@ const AlertsFilters = ({ activeFilter, setActiveFilter }: {
 };
 
 const Alerts = () => {
-  const [alerts, setAlerts] = useState(mockAlerts);
+  const [alerts, setAlerts] = useState<Alert[]>(mockAlerts.map(alert => ({
+    ...alert,
+    severity: alert.severity,
+  })));
   const [filter, setFilter] = useState("all");
 
   const filteredAlerts = alerts.filter((alert) => {
     if (filter === "all") return true;
     if (filter === "unread") return !alert.read;
-    return alert.type === filter;
+    return alert.severity === filter;
   });
 
   const handleMarkAsRead = (id: string) => {

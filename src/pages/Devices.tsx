@@ -22,6 +22,7 @@ const Devices = () => {
   const filteredDevices = mockDevices.filter(device => {
     const matchesSearch = device.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === "all" || device.status === statusFilter;
+    // Fixed comparison to match device.status values
     return matchesSearch && matchesStatus;
   });
 
@@ -29,7 +30,7 @@ const Devices = () => {
     all: mockDevices.length,
     active: mockDevices.filter(d => d.status === 'active').length,
     warning: mockDevices.filter(d => d.status === 'warning').length,
-    error: mockDevices.filter(d => d.status === 'error').length,
+    alert: mockDevices.filter(d => d.status === 'alert').length,
     inactive: mockDevices.filter(d => d.status === 'inactive').length,
   };
 
@@ -47,7 +48,8 @@ const Devices = () => {
         </div>
 
         <div className="grid gap-6">
-          <DataCard>
+          {/* Added title prop to the DataCard component */}
+          <DataCard title="Filter Devices">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="relative w-full md:w-80">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
