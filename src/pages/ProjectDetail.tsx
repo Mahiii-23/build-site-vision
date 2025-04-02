@@ -48,6 +48,11 @@ import {
   LineChart,
   Line
 } from "recharts";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent
+} from "@/components/ui/chart";
 import { format, differenceInDays } from "date-fns";
 import { mockProjects, mockDevices } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
@@ -143,6 +148,22 @@ const ProjectDetail = () => {
     { name: "Materials", planned: 90, actual: 88 },
     { name: "Logistics", planned: 60, actual: 65 },
   ];
+
+  // Chart configs for different chart types
+  const chartConfig = {
+    progressTracking: {
+      planned: { label: "Planned Progress", theme: { light: "#8884d8", dark: "#8884d8" } },
+      actual: { label: "Actual Progress", theme: { light: "#82ca9d", dark: "#82ca9d" } },
+    },
+    progressByWeek: {
+      planned: { label: "Planned Progress", theme: { light: "#8884d8", dark: "#8884d8" } },
+      actual: { label: "Actual Progress", theme: { light: "#82ca9d", dark: "#82ca9d" } },
+    },
+    resourceUtilization: {
+      planned: { label: "Planned %", theme: { light: "#8884d8", dark: "#8884d8" } },
+      actual: { label: "Actual %", theme: { light: "#82ca9d", dark: "#82ca9d" } },
+    },
+  };
 
   return (
     <DashboardLayout>
@@ -334,17 +355,17 @@ const ProjectDetail = () => {
               {/* Project Chart */}
               <DataCard title="Progress Tracking" className="lg:col-span-3">
                 <div className="h-80 p-4">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ChartContainer config={chartConfig.progressTracking}>
                     <LineChart data={progressByWeek}>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="week" />
                       <YAxis />
-                      <Tooltip />
+                      <ChartTooltip content={<ChartTooltipContent />} />
                       <Legend />
                       <Line type="monotone" dataKey="planned" stroke="#8884d8" name="Planned Progress" />
                       <Line type="monotone" dataKey="actual" stroke="#82ca9d" name="Actual Progress" />
                     </LineChart>
-                  </ResponsiveContainer>
+                  </ChartContainer>
                 </div>
               </DataCard>
             </div>
@@ -454,17 +475,17 @@ const ProjectDetail = () => {
               
               <DataCard title="Progress by Week">
                 <div className="h-80 p-4">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ChartContainer config={chartConfig.progressByWeek}>
                     <BarChart data={progressByWeek}>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="week" />
                       <YAxis />
-                      <Tooltip />
+                      <ChartTooltip content={<ChartTooltipContent />} />
                       <Legend />
                       <Bar dataKey="planned" fill="#8884d8" name="Planned Progress" />
                       <Bar dataKey="actual" fill="#82ca9d" name="Actual Progress" />
                     </BarChart>
-                  </ResponsiveContainer>
+                  </ChartContainer>
                 </div>
               </DataCard>
               
@@ -599,17 +620,17 @@ const ProjectDetail = () => {
               
               <DataCard title="Resource Utilization">
                 <div className="h-80 p-4">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ChartContainer config={chartConfig.resourceUtilization}>
                     <BarChart data={resourceUtilization} layout="vertical">
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis type="number" />
                       <YAxis type="category" dataKey="name" />
-                      <Tooltip />
+                      <ChartTooltip content={<ChartTooltipContent />} />
                       <Legend />
                       <Bar dataKey="planned" fill="#8884d8" name="Planned %" />
                       <Bar dataKey="actual" fill="#82ca9d" name="Actual %" />
                     </BarChart>
-                  </ResponsiveContainer>
+                  </ChartContainer>
                 </div>
               </DataCard>
               

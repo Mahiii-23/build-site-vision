@@ -115,6 +115,43 @@ const Analytics = () => {
     { name: "81-100%", count: mockDevices.filter(d => d.batteryLevel > 80).length },
   ];
 
+  // Chart configs for different chart types
+  const chartConfig = {
+    deviceStatus: {
+      active: { label: "Active", theme: { light: "#22c55e", dark: "#22c55e" } },
+      warning: { label: "Warning", theme: { light: "#f59e0b", dark: "#f59e0b" } },
+      error: { label: "Error", theme: { light: "#ef4444", dark: "#ef4444" } },
+      inactive: { label: "Inactive", theme: { light: "#94a3b8", dark: "#94a3b8" } },
+    },
+    deviceTypes: {
+      value: { label: "Count", theme: { light: "#3b82f6", dark: "#3b82f6" } },
+    },
+    utilization: {
+      utilization: { label: "Utilization", theme: { light: "#3b82f6", dark: "#3b82f6" } },
+    },
+    batteryLevels: {
+      count: { label: "Devices", theme: { light: "#8884d8", dark: "#8884d8" } },
+    },
+    alertTypes: {
+      Error: { label: "Error", theme: { light: "#ef4444", dark: "#ef4444" } },
+      Warning: { label: "Warning", theme: { light: "#f59e0b", dark: "#f59e0b" } },
+      Info: { label: "Info", theme: { light: "#3b82f6", dark: "#3b82f6" } },
+    },
+    projectStatus: {
+      Active: { label: "Active", theme: { light: "#22c55e", dark: "#22c55e" } },
+      Paused: { label: "Paused", theme: { light: "#f59e0b", dark: "#f59e0b" } },
+      Completed: { label: "Completed", theme: { light: "#3b82f6", dark: "#3b82f6" } },
+    },
+    projectProgress: {
+      progress: { label: "Progress", theme: { light: "#22c55e", dark: "#22c55e" } },
+    },
+    alertsOverTime: {
+      error: { label: "Error", theme: { light: "#ef4444", dark: "#ef4444" } },
+      warning: { label: "Warning", theme: { light: "#f59e0b", dark: "#f59e0b" } },
+      info: { label: "Info", theme: { light: "#3b82f6", dark: "#3b82f6" } },
+    },
+  };
+
   return (
     <DashboardLayout>
       <div className="p-6">
@@ -193,14 +230,14 @@ const Analytics = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
               <DataCard title="Device Status Distribution">
                 <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ChartContainer config={chartConfig.deviceStatus}>
                     <PieChart>
                       <Pie
                         data={[
-                          { name: 'Active', value: deviceStats.activeDevices, color: '#22c55e' },
-                          { name: 'Warning', value: deviceStats.warningDevices, color: '#f59e0b' },
-                          { name: 'Error', value: deviceStats.alertDevices, color: '#ef4444' },
-                          { name: 'Inactive', value: deviceStats.inactiveDevices, color: '#94a3b8' },
+                          { name: 'active', value: deviceStats.activeDevices, color: '#22c55e' },
+                          { name: 'warning', value: deviceStats.warningDevices, color: '#f59e0b' },
+                          { name: 'error', value: deviceStats.alertDevices, color: '#ef4444' },
+                          { name: 'inactive', value: deviceStats.inactiveDevices, color: '#94a3b8' },
                         ]}
                         cx="50%"
                         cy="50%"
@@ -211,32 +248,32 @@ const Analytics = () => {
                         dataKey="value"
                       >
                         {[
-                          { name: 'Active', value: deviceStats.activeDevices, color: '#22c55e' },
-                          { name: 'Warning', value: deviceStats.warningDevices, color: '#f59e0b' },
-                          { name: 'Error', value: deviceStats.alertDevices, color: '#ef4444' },
-                          { name: 'Inactive', value: deviceStats.inactiveDevices, color: '#94a3b8' },
+                          { name: 'active', value: deviceStats.activeDevices, color: '#22c55e' },
+                          { name: 'warning', value: deviceStats.warningDevices, color: '#f59e0b' },
+                          { name: 'error', value: deviceStats.alertDevices, color: '#ef4444' },
+                          { name: 'inactive', value: deviceStats.inactiveDevices, color: '#94a3b8' },
                         ].map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={entry.color} />
                         ))}
                       </Pie>
-                      <Tooltip content={<ChartTooltipContent />} />
+                      <ChartTooltip content={<ChartTooltipContent />} />
                       <Legend />
                     </PieChart>
-                  </ResponsiveContainer>
+                  </ChartContainer>
                 </div>
               </DataCard>
               
               <DataCard title="Device Types Distribution">
                 <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ChartContainer config={chartConfig.deviceTypes}>
                     <BarChart data={deviceTypesData}>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="name" />
                       <YAxis />
-                      <Tooltip content={<ChartTooltipContent />} />
+                      <ChartTooltip content={<ChartTooltipContent />} />
                       <Bar dataKey="value" fill="#3b82f6" />
                     </BarChart>
-                  </ResponsiveContainer>
+                  </ChartContainer>
                 </div>
               </DataCard>
             </div>
@@ -244,12 +281,12 @@ const Analytics = () => {
             <div className="grid grid-cols-1 gap-6">
               <DataCard title="Device Utilization Over Time">
                 <div className="h-72">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ChartContainer config={chartConfig.utilization}>
                     <LineChart data={deviceUtilizationData}>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="name" />
                       <YAxis />
-                      <Tooltip content={<ChartTooltipContent />} />
+                      <ChartTooltip content={<ChartTooltipContent />} />
                       <Legend />
                       <Line
                         type="monotone"
@@ -258,21 +295,21 @@ const Analytics = () => {
                         activeDot={{ r: 8 }}
                       />
                     </LineChart>
-                  </ResponsiveContainer>
+                  </ChartContainer>
                 </div>
               </DataCard>
               
               <DataCard title="Battery Level Distribution">
                 <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ChartContainer config={chartConfig.batteryLevels}>
                     <BarChart data={batteryLevelData}>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="name" />
                       <YAxis />
-                      <Tooltip content={<ChartTooltipContent />} />
+                      <ChartTooltip content={<ChartTooltipContent />} />
                       <Bar dataKey="count" fill="#8884d8" />
                     </BarChart>
-                  </ResponsiveContainer>
+                  </ChartContainer>
                 </div>
               </DataCard>
             </div>
@@ -283,7 +320,7 @@ const Analytics = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
               <DataCard title="Project Status Distribution">
                 <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ChartContainer config={chartConfig.projectStatus}>
                     <PieChart>
                       <Pie
                         data={[
@@ -307,10 +344,10 @@ const Analytics = () => {
                           <Cell key={`cell-${index}`} fill={entry.color} />
                         ))}
                       </Pie>
-                      <Tooltip content={<ChartTooltipContent />} />
+                      <ChartTooltip content={<ChartTooltipContent />} />
                       <Legend />
                     </PieChart>
-                  </ResponsiveContainer>
+                  </ChartContainer>
                 </div>
               </DataCard>
               
@@ -326,12 +363,12 @@ const Analytics = () => {
             
             <DataCard title="Project Progress Over Time">
               <div className="h-72">
-                <ResponsiveContainer width="100%" height="100%">
+                <ChartContainer config={chartConfig.projectProgress}>
                   <LineChart data={projectProgressData}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
                     <YAxis />
-                    <Tooltip content={<ChartTooltipContent />} />
+                    <ChartTooltip content={<ChartTooltipContent />} />
                     <Legend />
                     <Line
                       type="monotone"
@@ -340,7 +377,7 @@ const Analytics = () => {
                       activeDot={{ r: 8 }}
                     />
                   </LineChart>
-                </ResponsiveContainer>
+                </ChartContainer>
               </div>
             </DataCard>
           </TabsContent>
@@ -350,7 +387,7 @@ const Analytics = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
               <DataCard title="Alert Type Distribution">
                 <div className="h-64">
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ChartContainer config={chartConfig.alertTypes}>
                     <PieChart>
                       <Pie
                         data={alertTypesData}
@@ -366,10 +403,10 @@ const Analytics = () => {
                           <Cell key={`cell-${index}`} fill={entry.color} />
                         ))}
                       </Pie>
-                      <Tooltip content={<ChartTooltipContent />} />
+                      <ChartTooltip content={<ChartTooltipContent />} />
                       <Legend />
                     </PieChart>
-                  </ResponsiveContainer>
+                  </ChartContainer>
                 </div>
               </DataCard>
               
@@ -399,7 +436,7 @@ const Analytics = () => {
             
             <DataCard title="Alerts Over Time">
               <div className="h-72">
-                <ResponsiveContainer width="100%" height="100%">
+                <ChartContainer config={chartConfig.alertsOverTime}>
                   <LineChart data={[
                     { month: "Jan", error: 5, warning: 8, info: 12 },
                     { month: "Feb", error: 8, warning: 10, info: 15 },
@@ -413,13 +450,13 @@ const Analytics = () => {
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="month" />
                     <YAxis />
-                    <Tooltip content={<ChartTooltipContent />} />
+                    <ChartTooltip content={<ChartTooltipContent />} />
                     <Legend />
                     <Line type="monotone" dataKey="error" stroke="#ef4444" activeDot={{ r: 8 }} />
                     <Line type="monotone" dataKey="warning" stroke="#f59e0b" />
                     <Line type="monotone" dataKey="info" stroke="#3b82f6" />
                   </LineChart>
-                </ResponsiveContainer>
+                </ChartContainer>
               </div>
             </DataCard>
           </TabsContent>
